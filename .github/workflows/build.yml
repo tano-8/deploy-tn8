@@ -24,30 +24,26 @@ jobs:
           token: ${{ secrets.GH_TOKEN }}
           path: source
 
-      - name: Setup Bun
-        uses: oven-sh/setup-bun@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
         with:
-          bun-version: latest
-
-      - name: Cache Bun
-        uses: actions/cache@v5
-        with:
-          path: ~/.bun/install/cache
-          key: ${{ runner.os }}-bun-${{ hashFiles('source/bun.lock') }}
+          node-version: 20
+          cache: 'npm'
+          cache-dependency-path: source/package-lock.json
 
       - name: Install dependencies
         working-directory: source
-        run: bun install --frozen-lockfile
+        run: npm ci
 
-      - name: Build Astro
+      - name: Build source
         working-directory: source
-        run: bun run build
+        run: npm run build
         env:
           NODE_ENV: production
           NOTION_API_SECRET: ${{ secrets.NOTION_API_SECRET }}
           DATABASE_ID: https://app.notion.com/p/65099a4927b74c3ca9c1a95dc993018a
 
-      - name: Count files
+      - name: Verify build output
         run: |
           echo "Files in dist:"
           find source/dist -type f | wc -l
@@ -55,7 +51,7 @@ jobs:
           du -sh source/dist
 
       - name: Deploy to Cloudflare Pages
-        run: bunx wrangler pages deploy source/dist --project-name=tano8 --branch=main
+        run: npx wrangler pages deploy source/dist --project-name=tano8 --branch=main
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
