@@ -51,12 +51,12 @@ jobs:
       - name: Report
         run: |
           echo "Files in dist:"
-          find apps/movies/dist -type f | wc -l
+          find source/apps/movies/dist -type f | wc -l
           echo "Total size:"
-          du -sh apps/movies/dist
+          du -sh source/apps/movies/dist
 
       - name: Deploy
-        run: pnpm dlx wrangler pages deploy apps/movies/dist --project-name=tano8-movies --branch=main
+        run: pnpm dlx wrangler pages deploy source/apps/movies/dist --project-name=tano8-movies --branch=main
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
