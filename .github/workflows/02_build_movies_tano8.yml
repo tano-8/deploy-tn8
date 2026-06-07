@@ -3,6 +3,8 @@ name: Deploy movies
 on:
   push:
     branches: [main]
+    paths:
+      - "domains/tano8-movies/**"
   workflow_dispatch:
 
 concurrency:
