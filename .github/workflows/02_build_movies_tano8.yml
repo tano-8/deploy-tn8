@@ -47,7 +47,7 @@ jobs:
         run: echo "week=$(date +'%Y-%U')" >> $GITHUB_OUTPUT
 
       - name: Cache Media (Rotating Key)
-        uses: actions/cache@v6
+        uses: actions/cache@v5
         with:
           path: source/apps/movies/public/media
           key: ${{ runner.os }}-media-movies-${{ steps.date.outputs.week }}
@@ -55,7 +55,7 @@ jobs:
             ${{ runner.os }}-media-movies-
 
       - name: Cache Astro & Vite
-        uses: actions/cache@v6
+        uses: actions/cache@v5
         with:
           path: |
             source/node_modules/.cache
