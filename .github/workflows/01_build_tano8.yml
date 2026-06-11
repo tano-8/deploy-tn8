@@ -42,6 +42,28 @@ jobs:
         working-directory: source
         run: pnpm install --frozen-lockfile
 
+      - name: Get current week
+        id: date
+        run: echo "week=$(date +'%Y-%U')" >> $GITHUB_OUTPUT
+
+      - name: Cache Media (Rotating Key)
+        uses: actions/cache@v6
+        with:
+          path: source/apps/tano8/public/media
+          key: ${{ runner.os }}-media-tano8-${{ steps.date.outputs.week }}
+          restore-keys: |
+            ${{ runner.os }}-media-tano8-
+
+      - name: Cache Astro & Vite
+        uses: actions/cache@v6
+        with:
+          path: |
+            source/node_modules/.cache
+            source/apps/tano8/.astro
+          key: ${{ runner.os }}-astro-tano8-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-astro-tano8-
+
       - name: Build
         working-directory: source
         run: pnpm build:tano8
