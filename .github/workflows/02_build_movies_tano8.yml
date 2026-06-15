@@ -4,7 +4,7 @@ on:
   push:
     branches: [main]
     paths:
-      - "domains/tano8-movies/**"
+      - 'domains/tano8-movies/**'
   workflow_dispatch:
 
 concurrency:
@@ -46,7 +46,7 @@ jobs:
         id: date
         run: echo "week=$(date +'%Y-%U')" >> $GITHUB_OUTPUT
 
-      - name: Cache Media (Rotating Key)
+      - name: Cache Media
         uses: actions/cache@v5
         with:
           path: source/apps/movies/public/media
@@ -84,3 +84,8 @@ jobs:
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+
+      - name: Indexing URLs
+        working-directory: source
+        run: |
+          pnpm index
